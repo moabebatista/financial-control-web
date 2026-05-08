@@ -6,6 +6,8 @@ import { TransactionsTable } from '../../components/transactions/transactions-ta
 
 import type { Transaction } from '../../components/transactions/transactions-table';
 
+import { CreateTransactionDialog } from '../../components/transactions/create-transaction-dialog';
+
 import { api } from '../../services/api';
 
 export function TransactionsPage() {
@@ -36,6 +38,10 @@ export function TransactionsPage() {
               Gerencie suas movimentações
             </p>
           </div>
+
+          <CreateTransactionDialog
+            onCreated={loadTransactions}
+          />
         </div>
 
         <TransactionsTable
