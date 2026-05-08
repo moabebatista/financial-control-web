@@ -4,9 +4,11 @@ import {
   LogOut,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/use-auth';
+import { useNavigate } from 'react-router-dom';
 
 export function Sidebar() {
   const { logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-slate-800 bg-slate-950 p-4">
@@ -15,12 +17,18 @@ export function Sidebar() {
       </h1>
 
       <nav className="flex flex-1 flex-col gap-2">
-        <button className="flex items-center gap-2 rounded-lg px-4 py-3 text-slate-200 transition hover:bg-slate-800 cursor-pointer">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 rounded-lg px-4 py-3 text-slate-200 transition hover:bg-slate-800 cursor-pointer"
+        >
           <LayoutDashboard size={20} />
           Dashboard
         </button>
 
-        <button className="flex items-center gap-2 rounded-lg px-4 py-3 text-slate-200 transition hover:bg-slate-800 cursor-pointer">
+        <button
+          onClick={() => navigate('/transactions')}
+          className="flex items-center gap-2 rounded-lg px-4 py-3 text-slate-200 transition hover:bg-slate-800 cursor-pointer"
+        >
           <Wallet size={20} />
           Transações
         </button>
