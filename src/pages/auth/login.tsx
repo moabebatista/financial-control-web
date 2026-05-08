@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
-
-// import { Button } from '@/components/ui/button';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/ui/button';
 import { useAuth } from '../../hooks/use-auth';
@@ -63,6 +61,15 @@ export function LoginPage() {
         >
           Entrar
         </Button>
+        <p className="text-center text-sm text-slate-600">
+          Não possui conta?{' '}
+          <Link
+            to="/register"
+            className="text-slate-500 hover:underline"
+          >
+            Criar conta
+          </Link>
+        </p>
       </Card>
     </div>
   );
