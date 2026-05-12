@@ -46,6 +46,7 @@ export function TransactionsPage() {
 
         <TransactionsTable
           transactions={transactions}
+           onUpdated={loadTransactions}
         />
       </div>
     </AppLayout>

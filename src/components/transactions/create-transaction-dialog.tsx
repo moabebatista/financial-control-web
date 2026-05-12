@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   Dialog,
@@ -21,6 +21,9 @@ import {
 } from '../../components/ui/select';
 
 import { api } from '../../services/api';
+import { showToast } from '../../lib/toast';
+import { CreateCategoryDialog } from '../categories/create-category-dialog';
+import { defaultCategories } from '../../utils';
 
 interface Props {
   onCreated: () => void;
@@ -51,6 +54,19 @@ export function CreateTransactionDialog({
   const [loading, setLoading] =
     useState(false);
 
+  const [categories, setCategories] =
+  useState<
+    {
+      id: string;
+      name: string;
+    }[]
+  >([]);
+
+  const [
+    openCategoryModal,
+    setOpenCategoryModal,
+  ] = useState(false);
+
   async function handleCreate() {
     if(!title || !amount || !category || !date) {
       alert('Por favor, preencha todos os campos');
@@ -78,13 +94,36 @@ export function CreateTransactionDialog({
       setDate('');
       setType('INCOME');
     } catch {
-      alert(
+      showToast.error(
         'Erro ao criar transação'
       );
     } finally {
       setLoading(false);
+      showToast.success(
+        'Transação criada com sucesso'
+      );
     }
   }
+
+  async function loadCategories() {
+    const DEFAULT_CATEGORIES = defaultCategories;
+
+    const response =
+      await api.get('/categories');
+
+      const filteredCategories = response.data.filter(
+        (c: { id: string; name: string }) =>
+          !DEFAULT_CATEGORIES.some(
+            (defaultCategory) => defaultCategory.name.toLocaleLowerCase() === c.name.toLocaleLowerCase()
+          )
+      );
+
+      setCategories([...DEFAULT_CATEGORIES, ...filteredCategories]);
+    }
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
 
   return (
     <Dialog
@@ -93,7 +132,7 @@ export function CreateTransactionDialog({
     >
       <DialogTrigger asChild className='cursor-pointer hover:bg-slate-800/50'>
         <Button>
-          Nova transação
+         <span className="mr-1 text-lg" >+</span> Nova transação
         </Button>
       </DialogTrigger>
 
@@ -122,13 +161,42 @@ export function CreateTransactionDialog({
             }
           />
 
-          <Input
-            placeholder="Categoria"
-            value={category}
-            onChange={(e) =>
-              setCategory(e.target.value)
-            }
-          />
+          <div className="space-y-2 flex gap-2">
+            <Select
+              value={category}
+              onValueChange={setCategory}
+            
+            >
+              <SelectTrigger className="min-w-[130px] capitalize">
+                <SelectValue placeholder="Selecione categoria" />
+              </SelectTrigger>
+
+              <SelectContent position='popper' side='bottom' align='start' sideOffset={4}>
+                {categories.map(
+                  (categoryItem) => (
+                    <SelectItem
+                      key={categoryItem.id}
+                      value={categoryItem.name}
+                      className='capitalize'
+                    >
+                      {categoryItem.name}
+                    </SelectItem>
+                  )
+                )}
+              </SelectContent>
+            </Select>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-35 cursor-pointer hover:bg-slate-800/50 text-black"
+              onClick={() =>
+                setOpenCategoryModal(true)
+              }
+            >
+              + Nova Categoria
+            </Button>
+          </div>
 
           <Input
             type="date"
@@ -172,6 +240,14 @@ export function CreateTransactionDialog({
           </Button>
         </div>
       </DialogContent>
+
+      <CreateCategoryDialog
+        open={openCategoryModal}
+        onOpenChange={
+          setOpenCategoryModal
+        }
+        onCreated={loadCategories}
+      />
     </Dialog>
   );
 }

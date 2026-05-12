@@ -1,33 +1,71 @@
-import type { ReactNode } from 'react';
+import {
+  ArrowDown,
+  ArrowUp,
+  Wallet,
+} from 'lucide-react';
+
 import { Card } from '../ui/card';
 
 interface Props {
-  title: string;
-  amount: number;
-  icon: ReactNode;
+  income: number;
+  expense: number;
+  balance: number;
 }
 
-export function SummaryCard({
-  title,
-  amount,
-  icon,
+export function SummaryCards({
+  income,
+  expense,
+  balance,
 }: Props) {
   return (
-    <Card className="border-slate-800 bg-slate-950 p-6 text-white">
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-slate-400">
-          {title}
-        </span>
+    <div className="grid gap-4 md:grid-cols-3">
+      <Card className="border-slate-800 bg-slate-950 p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-slate-400">
+              Receitas
+            </p>
 
-        {icon}
-      </div>
+            <h2 className="mt-2 text-3xl font-bold text-green-500">
+              R$ {income.toFixed(2)}
+            </h2>
+          </div>
 
-      <h2 className="mt-4 text-3xl font-bold">
-        {amount.toLocaleString('pt-BR', {
-          style: 'currency',
-          currency: 'BRL',
-        })}
-      </h2>
-    </Card>
+          <ArrowUp className="text-green-500" />
+        </div>
+      </Card>
+
+      <Card className="border-slate-800 bg-slate-950 p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-slate-400">
+              Despesas
+            </p>
+
+            <h2 className="mt-2 text-3xl font-bold text-red-500">
+              R$ {expense.toFixed(2)}
+            </h2>
+          </div>
+
+          <ArrowDown className="text-red-500" />
+        </div>
+      </Card>
+
+      <Card className="border-slate-800 bg-slate-950 p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-slate-400">
+              Saldo
+            </p>
+
+            <h2 className="mt-2 text-3xl font-bold text-cyan-500">
+              R$ {balance.toFixed(2)}
+            </h2>
+          </div>
+
+          <Wallet className="text-cyan-500" />
+        </div>
+      </Card>
+    </div>
   );
 }

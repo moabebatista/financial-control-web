@@ -7,6 +7,7 @@ import './index.css';
 import { Router } from './routes';
 
 import { AuthProvider } from './contexts/auth-context';
+import { Toaster } from 'sonner';
 
 ReactDOM.createRoot(
   document.getElementById('root')!
@@ -14,6 +15,10 @@ ReactDOM.createRoot(
   <React.StrictMode>
     <AuthProvider>
       <Router />
+      <Toaster
+        richColors
+        position="top-right"
+      />
     </AuthProvider>
   </React.StrictMode>
 );

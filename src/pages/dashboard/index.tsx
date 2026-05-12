@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 
-import {
-  ArrowDownCircle,
-  ArrowUpCircle,
-  DollarSign,
-} from 'lucide-react';
-
 import { AppLayout } from '../../layouts/app-layout';
-import { SummaryCard } from '../../components/dashboard/summary-card';
 
 import { api } from '../../services/api';
+
+import { SummaryCards } from '../../components/dashboard/summary-card';
+
+import { ExpenseChart } from '../../components/dashboard/expense-chart';
+
+import { CategoryChart } from '../../components/dashboard/category-chart';
 
 interface DashboardData {
   income: number;
@@ -17,28 +16,76 @@ interface DashboardData {
   balance: number;
 }
 
+interface Transaction {
+  id: string;
+  title: string;
+  amount: number;
+
+  type: 'INCOME' | 'EXPENSE';
+
+  category: string;
+
+  date: string;
+}
+
 export function DashboardPage() {
-  const [data, setData] =
+  const [dashboard, setDashboard] =
     useState<DashboardData>({
       income: 0,
       expense: 0,
       balance: 0,
     });
 
+  const [transactions, setTransactions] =
+    useState<Transaction[]>([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
   useEffect(() => {
-    loadDashboard();
+    loadData();
   }, []);
 
-  async function loadDashboard() {
-    const response =
-      await api.get('/dashboard');
+  async function loadData() {
+    try {
+      setLoading(true);
 
-    setData(response.data);
+      const [
+        dashboardResponse,
+        transactionsResponse,
+      ] = await Promise.all([
+        api.get('/dashboard'),
+
+        api.get('/transactions'),
+      ]);
+
+      setDashboard(
+        dashboardResponse.data
+      );
+
+      setTransactions(
+        transactionsResponse.data
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <AppLayout>
+        <div className="text-white">
+          Carregando dashboard...
+        </div>
+      </AppLayout>
+    );
   }
 
   return (
     <AppLayout>
-      <div className="space-y-8">
+      <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-white">
             Dashboard
@@ -49,35 +96,20 @@ export function DashboardPage() {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          <SummaryCard
-            title="Receitas"
-            amount={data.income}
-            icon={
-              <ArrowUpCircle
-                className="text-emerald-400"
-              />
-            }
+        <SummaryCards
+          income={dashboard.income}
+          expense={dashboard.expense}
+          balance={dashboard.balance}
+        />
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          <ExpenseChart
+            income={dashboard.income}
+            expense={dashboard.expense}
           />
 
-          <SummaryCard
-            title="Despesas"
-            amount={data.expense}
-            icon={
-              <ArrowDownCircle
-                className="text-red-400"
-              />
-            }
-          />
-
-          <SummaryCard
-            title="Saldo"
-            amount={data.balance}
-            icon={
-              <DollarSign
-                className="text-blue-400"
-              />
-            }
+          <CategoryChart
+            transactions={transactions}
           />
         </div>
       </div>

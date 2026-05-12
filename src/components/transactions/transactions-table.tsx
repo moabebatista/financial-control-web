@@ -8,6 +8,7 @@ import {
 } from '../ui/table';
 
 import { TransactionBadge } from './transaction-badge';
+import { TransactionActions } from './transaction-actions';
 
 export interface Transaction {
   id: string;
@@ -20,10 +21,12 @@ export interface Transaction {
 
 interface Props {
   transactions: Transaction[];
+  onUpdated: () => void;
 }
 
 export function TransactionsTable({
   transactions,
+  onUpdated,
 }: Props) {
   return (
     <div className="rounded-xl border border-slate-800 bg-slate-950">
@@ -89,6 +92,13 @@ export function TransactionsTable({
                       currency: 'BRL',
                     }
                   )}
+                </TableCell>
+
+                <TableCell className="text-right">
+                  <TransactionActions
+                    transaction={transaction}
+                    onUpdated={onUpdated}
+                  />
                 </TableCell>
               </TableRow>
             )
