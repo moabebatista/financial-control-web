@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { AppLayout } from '../../layouts/app-layout';
-
 import { api } from '../../services/api';
 
 import { SummaryCards } from '../../components/dashboard/summary-card';
@@ -9,6 +7,7 @@ import { SummaryCards } from '../../components/dashboard/summary-card';
 import { ExpenseChart } from '../../components/dashboard/expense-chart';
 
 import { CategoryChart } from '../../components/dashboard/category-chart';
+import { Loading } from '../../components/ui/loading';
 
 interface DashboardData {
   income: number;
@@ -69,22 +68,19 @@ export function DashboardPage() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   }
 
   if (loading) {
     return (
-      <AppLayout>
-        <div className="text-white">
-          Carregando dashboard...
-        </div>
-      </AppLayout>
+      <Loading text="Carregando dashboard..." />
     );
   }
 
   return (
-    <AppLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-white">
@@ -113,6 +109,5 @@ export function DashboardPage() {
           />
         </div>
       </div>
-    </AppLayout>
   );
 }

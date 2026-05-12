@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { AppLayout } from '../../layouts/app-layout';
-
 import { TransactionsTable } from '../../components/transactions/transactions-table';
 
 import type { Transaction } from '../../components/transactions/transactions-table';
@@ -26,7 +24,6 @@ export function TransactionsPage() {
   }
 
   return (
-    <AppLayout>
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <div>
@@ -49,6 +46,5 @@ export function TransactionsPage() {
            onUpdated={loadTransactions}
         />
       </div>
-    </AppLayout>
   );
 }

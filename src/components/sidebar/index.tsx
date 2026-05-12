@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   Wallet,
   LogOut,
+  CreditCard,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/use-auth';
 import { useNavigate } from 'react-router-dom';
@@ -31,6 +32,14 @@ export function Sidebar() {
         >
           <Wallet size={20} />
           Transações
+        </button>
+
+        <button
+          onClick={() => navigate('/cards')}
+          className="flex items-center gap-2 rounded-lg px-4 py-3 text-slate-200 transition hover:bg-slate-800 cursor-pointer"
+        >
+          <CreditCard size={20} />
+          Cartões
         </button>
       </nav>
 
